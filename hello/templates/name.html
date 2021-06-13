@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>根据对应的name查询mail</title>
+</head>
+
+<body>
+<p>请输入需要查询的name</p>
+
+<form action="/email" method="get">
+    user_name: <input type="text" name="name"> <br>
+    <br>
+    <input type="submit" value="查询">
+</form>
+
+<p>查询结果是:{{email}}</p>
+</body>
+</html>
