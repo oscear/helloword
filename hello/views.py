@@ -40,7 +40,9 @@ def user_mail(request):
 def register(request):
     '''注册页面'''
     res = ""
-    if request.method =='POST':
+    if request.method =='GET':
+        return render(request, 'register.html')
+    elif request.method =='POST':
         user_name = request.POST.get('username')
         psw = request.POST.get('psw')
         mail = request.POST.get('mail')
@@ -62,10 +64,41 @@ def login(request):
     if request.method =='GET':
         return render(request, 'login.html')
     elif request.method =='POST':
-        username = request.POST.get('username',None)
+        username = request.POST.get('username', None)
         psw = request.POST.get('psw',None)
-        user_lst = User.objects.filter(user_name=username,psw=psw).first()
+        user_lst = User.objects.filter(user_name=username, psw=psw).first()
         if user_lst:
             return HttpResponse('登陆成功')
         else:
-            return HttpResponse('账号密码不正确')
+            return render(request, 'login.html', {"error": "账号密码不正确"})
+
+def reset_psw(request):
+    if request.method =='GET':
+        return render(request,'reset_psw.html')
+    elif request.method =='POST':
+        user_name = request.POST.get('username', None)
+        psw = request.POST.get('psw',None)
+        new_psw = request.POST.get('new', None)
+        if psw == new_psw:
+            res = '新旧密码不能一样哦'
+            return render(request,'reset_psw.html',{'msg': res})
+        else:
+            #先查询库里是否有该用户
+            user_lst = User.objects.filter(user_name=user_name)
+            if user_lst:
+                #如果有该用户，检查密码是否正确
+                ret = User.objects.filter(user_name=user_name, psw=psw)
+                if ret:
+                    #有该用户且旧密码正确
+                    test1 = User.objects.get(user_name=user_name, psw=psw)
+                    test1.psw = new_psw
+                    test1.save()
+                    res = '密码修改成功'
+                else:
+                    #旧密码错误
+                    res = '旧密码错误'
+                return render(request, 'reset_psw.html', {'msg': res})
+            else:
+                #如果该账号未注册过
+                res = '该账号未注册'
+                return render(request, 'reset_psw.html', {'msg': res})

@@ -23,6 +23,40 @@ class ControlArticle(admin.ModelAdmin):
     #分层
     list_filter = ('auth',)
 
+class ControlBank(admin.ModelAdmin):
+    # 显示的字段
+    list_display = ["bank_name", "city", "point"]
+
+class ControlCardInfo(admin.ModelAdmin):
+    # 显示的字段
+    list_display = ["card_id", "card_user", "info"]
+
+class ControlAuther(admin.ModelAdmin):
+    # 显示的字段
+    list_display = ["name", "city", "mail"]
+
+class ControlBook(admin.ModelAdmin):
+    # 显示的字段
+    list_display = ["book_name", "作者"]
+
+    # 定义一个方法，遍历book的auth，然后用列表返回
+    def 作者(self, obj):
+        return [a.name for a in obj.auth.all()]
+class MoreInfo(admin.TabularInline):
+    '''StackedInline是纵向显示，TabularInline是横线显示'''
+    model = models.CardDetail
+
+@admin.register(models.Card)
+class ControlCard(admin.ModelAdmin):
+    list_display = ["card_id", "card_user", "add_time"]
+
+    # 在Card页面显示更多信息CardDetail
+    inlines = [MoreInfo]
+
 admin.site.register(models.User, ControlUser)
 admin.site.register(models.person)
 admin.site.register(models.Article, ControlArticle)
+admin.site.register(models.Bank, ControlBank)
+admin.site.register(models.Cardinfo, ControlCardInfo)
+admin.site.register(models.Auther, ControlAuther)
+admin.site.register(models.Book, ControlBook)

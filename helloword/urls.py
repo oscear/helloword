@@ -19,9 +19,11 @@ from django.conf.urls import url
 from helloword import view
 from hello import views
 from . import view, testdb
+import xadmin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('xadmin/', xadmin.site.urls),
     path("archive/<year>/<month>.html", views.home1),
     path("yoyo/", views.yoyo),
     path("page1/", views.page1),
@@ -46,4 +48,6 @@ urlpatterns = [
     url(r'^email/$', views.user_mail),
     url(r'^register/$', views.register),
     url(r'^login/$', views.login),
+    url(r'^reset/$', views.reset_psw),
+
 ]
